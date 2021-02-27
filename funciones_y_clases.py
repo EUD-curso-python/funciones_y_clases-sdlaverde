@@ -1,15 +1,19 @@
 global1 = 34
 
-def cambiar_global():
+import datetime
+
+def cambiar_global(a):
     '''Cambiar una variable global
 
     Esta función debe asignarle a la variable global `global1` el valor que se
     le pasa como único argumento posicional.
     '''
+    global global1
+    global1 = a
     pass
 
 
-def anio_bisiesto():
+def anio_bisiesto(a):
     '''Responder si el entero pasado como argumento es un año bisiesto
     
     Para determinar si un año es bisiesto, se deben tener en cuenta las 
@@ -21,9 +25,18 @@ def anio_bisiesto():
 
     Retorna True o False
     '''
+    if a%4 == 0:
+      if a%100 == 0:
+        return False
+      elif a%400 == 0:
+        return True
+      else:
+        return True
+    else:
+      return False
     pass
 
-def contar_valles():
+def contar_valles(a):
     r'''Contar el número de valles
 
     Esta función debe recibir como argumento una lista de -1's, 0's y 1's, y lo 
@@ -41,9 +54,22 @@ def contar_valles():
     representados en la lista, que para el ejemplo que se acaba de mostrar es
     de 3 valles.
     '''
+    cont = 0
+    b = False
+    for el in a:
+      if el == -1 and b == False:
+        b = True
+      if el == 1 and b == True:
+        b = False
+        cont += 1
+    return cont
+    print(cont)
     pass
 
-def saltando_rocas():
+#test = [-1,1,0,1,1,-1,0,0,0,0,1,-1,1,1,-1,-1]
+#print(test)
+#print(contar_valles(test))
+def saltando_rocas(li):
     '''Mínimo número de saltos en las rocas
 
     Esta función hace parte de un juego en el que el jugador debe cruzar un río
@@ -57,9 +83,35 @@ def saltando_rocas():
     El objetivo es devolver el número mínimo de saltos que debe realizar el 
     jugador para ganar la partida
     '''
+    saltos = 0
+    el = 0
+    print(len(li))
+    while el < len(li)-1:
+      print(el)
+      if el < len(li)-2:
+        if li[el+2] == 0:
+          print('a')
+          saltos += 1
+          el += 2
+        elif li[el+1] == 0:
+          print('b')
+          saltos += 1
+          el += 1
+      elif el < len(li)-1:
+        print('c')
+        if li[el+1] == 0:
+          print('d')
+          saltos += 1
+          el += 1
+        else:
+          el += 1
+    el += 1
+    return saltos
     pass
-
-def pares_medias():
+#test = [0,0,1,0,0,1,0,0,1,0,1]
+#print(test)
+#print(saltando_rocas(test))
+def pares_medias(li):
     '''Contar pares de medias
 
     Esta función debe recibir como argumento una lista de enteros. Cada elemento
@@ -69,7 +121,32 @@ def pares_medias():
     uno de los colores que se encuentren en la lista, y los valores son la 
     cantidad de pares que se han encontrado para cada color.
     '''
+    dic = {}
+    nopar = []
+    print('colores')
+    for el in li:
+      dic.setdefault(el,0)
+      print(dic)
+    print('medias')
+    for el in li:
+      dic[el] += 1
+      print(dic)
+    print('pares')
+    for el2 in dic:
+      dic[el2] = dic[el2]//2
+    print(dic)
+    for el2 in dic:
+      if dic[el2] == 0:
+        nopar.append(el2)
+    print('no pares')
+    print(nopar)
+    for el3 in nopar:
+      del dic[el3]    
+    return dic
     pass
+#test = [1,2,3,4,1,3,6,2,3,3,6]
+#print(test)
+#print(pares_medias(test))
 
 # Crear una clase llamada `ListaComa` que reciba en su constructor un iterable
 # con el valor inicial para una lista que se guardará en un atributo llamado 
@@ -77,8 +154,19 @@ def pares_medias():
 # los elementos del atributo `lista` unidos a través de comas. Ejemplo:
 # si `lista` es [1,2,3,4], __str__ debe devolver '1,2,3,4'
 
-
-
+class ListaComa:
+  def __init__(self,li):
+    self.li = li
+  
+  def __str__(self):
+    listr = []
+    for el in self.li:
+      listr.append(str(el))
+    salida = ','.join(listr)
+    return salida
+#[1,2,3,4]
+#lista = ListaComa([1,2,3,4])
+#print(str(lista))
 
 # Crear una clase llamada `Persona` que reciba en su constructor como 1er 
 # argumento un iterable con el valor inicial para una lista que se guardará en
@@ -96,8 +184,21 @@ def pares_medias():
 # si `nombres` es ['Juan', 'David'] y `apellidos` es ['Torres', 'Salazar'],
 # el método `nombre completo` debe devolver  'Juan David Torres Salazar'
 
+class Persona:
+  def __init__(self,nombres,apellidos):
+    self.nombres = []
+    self.apellidos = [] 
+    for el in nombres:
+      self.nombres.append(str(el).capitalize())
+    for el in apellidos:
+      self.apellidos.append(str(el).capitalize())
+  
+  def nombre_completo(self):
+    salida =  ' '.join(self.nombres)+' '+' '.join(self.apellidos)
+    return salida
 
-
+#personas = Persona(['sergio','daniel','andres',1],['laverde','bonilla','lopez',2])
+#print(personas.nombre_completo())
 
 
 # Crear una clase llamada `Persona1` que herede de la clase `Persona`, y que en su
@@ -111,3 +212,25 @@ def pares_medias():
 # si `fecha_nacimiento` es 1985-10-21 y la fecha actual es 2020-10-20, el método
 # `edad` debe devover 35.
 
+class Persona1(Persona):
+  def __init__(self,nombres,apellidos,fecha_nacimiento):
+    super().__init__(nombres,apellidos)
+    self.fecha_nacimiento = fecha_nacimiento
+  
+  def edad(self):
+    hoy = datetime.datetime.today()
+    delta = (hoy.year - self.fecha_nacimiento.year) -1
+    print(hoy.month)
+    print(self.fecha_nacimiento.month)
+    print(hoy.day)
+    print(self.fecha_nacimiento.day)
+    if hoy.month >= self.fecha_nacimiento.month and hoy.day >= self.fecha_nacimiento.day:
+      print('a')
+      delta += 1
+    #salida = delta.years()
+    print(delta)
+    return delta
+
+fecha = datetime.datetime.strptime('2008-02-27', '%Y-%m-%d')
+personas = Persona1(['sergio','daniel','andres'],['laverde','bonilla','lopez'],fecha)
+print(personas.edad())
